@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/components/ui/sonner";
 import { useAuth } from "@/context/AuthContext";
 import { Navigate } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface ChatMessage {
   id: string;
@@ -18,79 +19,66 @@ interface ChatMessage {
 
 const ChatbotPage = () => {
   const { user, loading: authLoading } = useAuth();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [loadingMessages, setLoadingMessages] = useState(true);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+const [messages, setMessages] = useState<ChatMessage[]>([]);
+const [newMessage, setNewMessage] = useState('');
+const [isLoading, setIsLoading] = useState(false);
+const queryClient = useQueryClient();
+const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  scrollToBottom();
+}, [messages]);
 
-  // Load chat history when user is authenticated
-  useEffect(() => {
-    if (user) {
-      loadChatHistory();
-    }
-  }, [user]);
+// Load chat history when user is authenticated, cached by TanStack Query
+const { data: chatHistoryData, isLoading: loadingMessages } = useQuery({
+  queryKey: ['chatHistory', user?.id],
+  queryFn: async () => {
+    const { data, error } = await supabase
+      .from('chat_history')
+      .select('*')
+      .eq('user_id', user!.id)
+      .order('created_at', { ascending: true });
+    if (error) throw error;
+    return data;
+  },
+  enabled: !!user,
+  staleTime: 5 * 60 * 1000,
+});
 
-  const loadChatHistory = async () => {
-    try {
-      setLoadingMessages(true);
-      const { data, error } = await supabase
-        .from('chat_history')
-        .select('*')
-        .eq('user_id', user!.id)
-        .order('created_at', { ascending: true });
+useEffect(() => {
+  if (!chatHistoryData) return;
 
-      if (error) throw error;
+  if (chatHistoryData.length === 0) {
+    // Add welcome message for new users
+    const welcomeMessage: ChatMessage = {
+      id: 'welcome',
+      content: "Hello! I'm your CU AI Assistant! 🤖✨ I'm here to help you with study tips, health advice, university life, and much more. What would you like to know today?",
+      sender: 'ai',
+      timestamp: new Date()
+    };
+    setMessages([welcomeMessage]);
 
-      if (data.length === 0) {
-        // Add welcome message for new users
-        const welcomeMessage: ChatMessage = {
-          id: 'welcome',
-          content: "Hello! I'm your CU AI Assistant! 🤖✨ I'm here to help you with study tips, health advice, university life, and much more. What would you like to know today?",
-          sender: 'ai',  // Changed from 'bot' to 'ai'
-          timestamp: new Date()
-        };
-        setMessages([welcomeMessage]);
-        
-        // Save welcome message to database
-        await supabase.from('chat_history').insert({
-          content: welcomeMessage.content,
-          sender: welcomeMessage.sender,
-          user_id: user!.id
-        });
-      } else {
-        // Convert database messages to UI format
-        const formattedMessages: ChatMessage[] = data.map(msg => ({
-          id: msg.id,
-          content: msg.content,
-          sender: msg.sender as 'user' | 'ai',  // Changed from 'bot' to 'ai'
-          timestamp: new Date(msg.created_at)
-        }));
-        setMessages(formattedMessages);
-      }
-    } catch (error) {
-      console.error('Error loading chat history:', error);
-      toast.error('Failed to load chat history');
-      // Still show welcome message if loading fails
-      const welcomeMessage: ChatMessage = {
-        id: 'welcome',
-        content: "Hello! I'm your CU AI Assistant! 🤖✨ I'm here to help you with study tips, health advice, university life, and much more. What would you like to know today?",
-        sender: 'ai',  // Changed from 'bot' to 'ai'
-        timestamp: new Date()
-      };
-      setMessages([welcomeMessage]);
-    } finally {
-      setLoadingMessages(false);
-    }
-  };
+    // Save welcome message to database
+    supabase.from('chat_history').insert({
+      content: welcomeMessage.content,
+      sender: welcomeMessage.sender,
+      user_id: user!.id
+    });
+  } else {
+    // Convert database messages to UI format
+    const formattedMessages: ChatMessage[] = chatHistoryData.map(msg => ({
+      id: msg.id,
+      content: msg.content,
+      sender: msg.sender as 'user' | 'ai',
+      timestamp: new Date(msg.created_at)
+    }));
+    setMessages(formattedMessages);
+  }
+}, [chatHistoryData, user]);
 
   const suggestedQuestions = [
     "How can I improve my study habits?",
