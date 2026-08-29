@@ -1,0 +1,21 @@
+name: Supabase Keep Alive
+
+# Runs on a schedule to ping Supabase and prevent free-tier inactivity pausing.
+# Free-tier projects pause after 7 days with no database activity, this runs
+# every 3 days as a safe buffer.
+
+on:
+  schedule:
+    - cron: "0 9 */3 * *" # runs at 9:00 UTC every 3 days
+  workflow_dispatch: # lets you trigger it manually from the Actions tab too
+
+jobs:
+  ping-supabase:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase database
+        run: |
+          curl -s -X GET \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/chat_history?select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"

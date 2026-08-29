@@ -1,0 +1,271 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 98%;
+    --foreground: 240 10% 3.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 262 30% 95%;
+    --secondary-foreground: 240 5.9% 10%;
+
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+
+    --accent: 262 30% 95%;
+    --accent-foreground: 240 5.9% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 262 83% 58%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 262 83% 68%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 262 30% 20%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --accent: 262 30% 20%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 262 83% 68%;
+    
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-gradient-to-br from-purple-50 via-white to-purple-100 text-foreground font-poppins;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Improve touch targets on mobile */
+  button, input, select, textarea {
+    font-size: 16px;
+  }
+
+  @media (max-width: 768px) {
+    button, input, select, textarea {
+      font-size: 16px;
+    }
+  }
+}
+
+@layer components {
+  .cu-gradient {
+    @apply bg-gradient-to-r from-purple-700 via-purple-600 to-purple-800;
+  }
+
+  .cu-card {
+    @apply bg-white/90 backdrop-blur-sm border border-purple-100 rounded-xl shadow-lg transition-all duration-300;
+  }
+
+  /* Reduce hover effects on mobile */
+  @media (hover: hover) {
+    .cu-card {
+      @apply hover:shadow-xl hover:scale-[1.02];
+    }
+  }
+
+  .cu-button {
+    @apply bg-gradient-to-r from-purple-600 to-purple-700 text-white font-medium px-4 py-2 sm:px-6 sm:py-3 rounded-lg shadow-md transition-all duration-300;
+  }
+
+  @media (hover: hover) {
+    .cu-button {
+      @apply hover:from-purple-700 hover:to-purple-800 hover:shadow-lg transform hover:scale-105;
+    }
+  }
+
+  .cu-header {
+    @apply text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-purple-800 via-purple-600 to-purple-900 bg-clip-text text-transparent font-playfair;
+  }
+
+  .page-transition {
+    @apply transition-all duration-500 ease-in-out;
+  }
+
+  .floating-animation {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  /* Reduce animations on mobile devices */
+  @media (max-width: 768px) {
+    .floating-animation {
+      animation: float 8s ease-in-out infinite;
+    }
+  }
+
+  /* Disable animations for users who prefer reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .floating-animation {
+      animation: none;
+    }
+  }
+
+  .bounce-in {
+    animation: bounceIn 0.8s ease-out;
+  }
+
+  .slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+
+  .glow-hover {
+    @apply transition-all duration-300;
+  }
+
+  @media (hover: hover) {
+    .glow-hover {
+      @apply hover:shadow-lg hover:shadow-purple-300/50;
+    }
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@media (max-width: 768px) {
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+  }
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.3) translateY(-30px); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1) translateY(0px); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  @keyframes bounceIn {
+    0% { transform: scale(0.5) translateY(-20px); opacity: 0; }
+    50% { transform: scale(1.02); }
+    70% { transform: scale(0.95); }
+    100% { transform: scale(1) translateY(0px); opacity: 1; }
+  }
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  @keyframes slideUp {
+    0% { transform: translateY(10px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+}
+
+@keyframes bookOpen {
+  0% { transform: rotateY(-90deg); opacity: 0; }
+  100% { transform: rotateY(0deg); opacity: 1; }
+}
+
+@keyframes studyWalk {
+  0%, 100% { transform: translateX(0px); }
+  50% { transform: translateX(10px); }
+}
+
+@keyframes thinkingPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+.book-open {
+  animation: bookOpen 0.8s ease-out;
+}
+
+.study-walk {
+  animation: studyWalk 3s ease-in-out infinite;
+}
+
+.thinking-pulse {
+  animation: thinkingPulse 2s ease-in-out infinite;
+}
+
+/* Disable complex animations on mobile */
+@media (max-width: 768px) {
+  .book-open,
+  .study-walk,
+  .thinking-pulse {
+    animation: none;
+  }
+}
+
+/* iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  input, textarea {
+    border-radius: 0;
+  }
+}
