@@ -4,7 +4,7 @@ An intelligent study companion built for Covenant University students. Combines 
 
 This was Cynthia Onuoha's final year project.
 
-**Live site:** _add your deployed URL here once deployed_
+**Live site:** https://cu-ai-desk.vercel.app/
 
 ## Features
 
