@@ -33,7 +33,7 @@ export const EmailConfirmationTemplate = ({
   
   // Generate the verification URL
   const verificationUrl = token_hash.startsWith('direct-') 
-    ? 'https://cuaidesk.org.ng/auth'
+    ? 'https://cu-ai-desk.vercel.app/auth'
     : `${supabase_url}/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${redirect_to}`;
 
   return (

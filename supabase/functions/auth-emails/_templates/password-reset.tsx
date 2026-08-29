@@ -33,8 +33,8 @@ export const PasswordResetTemplate = ({
   
   // Generate the reset URL - always use reset-password for password resets
   const resetUrl = token_hash.startsWith('direct-') 
-    ? 'https://cuaidesk.org.ng/reset-password'
-    : `${supabase_url}/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${redirect_to || 'https://cuaidesk.org.ng/reset-password'}`;
+    ? 'https://cu-ai-desk.vercel.app/reset-password'
+    : `${supabase_url}/auth/v1/verify?token=${token_hash}&type=${email_action_type}&redirect_to=${redirect_to || 'https://cu-ai-desk.vercel.app/reset-password'}`;
 
   return (
     <Html>

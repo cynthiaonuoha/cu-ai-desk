@@ -179,11 +179,11 @@ Deno.serve(async (req) => {
 
     // Generate the URLs
     const verificationUrl = emailTokenHash.startsWith('direct-') 
-      ? 'https://cuaidesk.org.ng/auth'
+      ? 'https://cu-ai-desk.vercel.app/auth'
       : `${Deno.env.get('SUPABASE_URL')}/auth/v1/verify?token=${emailTokenHash}&type=${email_action_type}&redirect_to=${emailRedirectTo}`;
 
     const resetUrl = emailTokenHash.startsWith('direct-') 
-      ? 'https://cuaidesk.org.ng/reset-password'
+      ? 'https://cu-ai-desk.vercel.app/reset-password'
       : `${Deno.env.get('SUPABASE_URL')}/auth/v1/verify?token=${emailTokenHash}&type=${email_action_type}&redirect_to=${emailRedirectTo}`;
 
     let html: string
